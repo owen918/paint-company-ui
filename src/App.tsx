@@ -1,11 +1,25 @@
+import { Redirect, Route, Switch } from 'react-router-dom';
 import './App.css';
-import { NavBar } from './components/NavbarAndFooter/Navbar';
+import { AdminPage } from './layouts/AdminPage/AdminPage';
+import { NavBar } from './layouts/NavbarAndFooter/Navbar';
+import { InventoryPage } from './layouts/InventoryPage/InventoryPage';
 
 function App() {
   return (
-    <div className="App">
+    <>
       <NavBar />
-    </div>
+      <Switch>
+        <Route path={'/'} exact>
+          <Redirect to={'inventory'} />
+        </Route>
+        <Route path={'/inventory'}>
+          <InventoryPage />
+        </Route>
+        <Route path={'/admin'}>
+          <AdminPage />
+        </Route>
+      </Switch>
+    </>
   );
 }
 

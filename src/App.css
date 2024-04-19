@@ -38,11 +38,5 @@
 }
 
 .navbar {
-  padding-inline: 2rem;
   border-bottom: 1px solid #ccc;
-  max-height: 50px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  color: var(--text-color);
 }

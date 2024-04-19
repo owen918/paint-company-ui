@@ -1,0 +1,32 @@
+[
+    {
+        "id": 1,
+        "name": "blue",
+        "amount": 15,
+        "status": "running_low"
+    },
+    {
+        "id": 2,
+        "name": "black",
+        "amount": 100,
+        "status": "available"
+    },
+    {
+        "id": 3,
+        "name": "white",
+        "amount": 80,
+        "status": "available"
+    },
+    {
+        "id": 4,
+        "name": "purple",
+        "amount": 0,
+        "status": "out_of_stock"
+    },
+    {
+        "id": 5,
+        "name": "grey",
+        "amount": 30,
+        "status": "running_low"
+    }
+]
