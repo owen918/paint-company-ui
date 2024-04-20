@@ -40,3 +40,31 @@
 .navbar {
   border-bottom: 1px solid #ccc;
 }
+
+.board {
+  display: flex;
+  flex-direction: column;
+  word-wrap: break-word;
+  background-color: #f2f2f3;
+  background-clip: border-box;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  border-radius: 0.25rem;
+  height: 100%;
+  max-height: 80vh;
+}
+
+.board-card {
+  overflow-y: auto;
+}
+
+.board-available {
+  background-color: #B9EFB2;
+}
+
+.board-running-low {
+  background-color: #F9EE97;
+}
+
+.board-out-of-stock {
+  background-color: #FFC3AE;
+}
