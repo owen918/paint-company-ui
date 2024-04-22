@@ -2,12 +2,13 @@ import React from "react";
 import InventoryModel from "../../../models/InventoryModel";
 import Status from "../../../models/InventoryStatusModel";
 
-interface Prop {
+const ListView = ({
+  inventory,
+  setModalTitle,
+}: {
   inventory: InventoryModel[];
   setModalTitle: (s: string) => void;
-}
-
-const ListView = ({ inventory, setModalTitle }: Prop) => {
+}) => {
   return (
     <table className="table align-middle mt-3 table-striped">
       <thead className="table-light">
@@ -43,7 +44,7 @@ const ListView = ({ inventory, setModalTitle }: Prop) => {
                 className="btn"
                 data-bs-toggle="modal"
                 data-bs-target="#staticBackdrop"
-                onClick={() => setModalTitle('Adjust Inventory')}
+                onClick={() => setModalTitle("Adjust Inventory")}
               >
                 <i className="bi bi-pencil-square"></i>
               </button>
