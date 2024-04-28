@@ -1,7 +1,7 @@
 enum Status {
-    available = 'Available' as any,
-    running_low = 'Running Low' as any,
-    out_of_stock = 'Out of Stock' as any
+  available = "available",
+  running_low = "running_low",
+  out_of_stock = "out_of_stock",
 }
 
-export default Status
+export default Status;

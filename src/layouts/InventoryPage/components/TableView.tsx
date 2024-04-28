@@ -1,53 +1,80 @@
-const Status = ({ status }) => {
-  if (status === "available") {
-    return <span className="badge text-bg-success">available</span>;
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+} from "@mui/material";
+import TableRow from "@mui/material/TableRow";
+import InventoryModel from "../../../models/InventoryModel";
+import InventoryStatusModel from "../../../models/InventoryStatusModel";
+
+interface Prop {
+  data: InventoryModel[];
+  columnConfig: string[];
+}
+
+const Status = ({ status }: { status: InventoryStatusModel }) => {
+  if (status === InventoryStatusModel.available) {
+    return <span className="badge text-bg-success">Available</span>;
   }
-  if (status === "running_low") {
-    return <span className="badge text-bg-warning">running_low</span>;
+  if (status === InventoryStatusModel.running_low) {
+    return <span className="badge text-bg-warning">Running Low</span>;
   }
-  if (status === "out_of_stock") {
-    return <span className="badge text-bg-danger">out_of_stock</span>;
+  if (status === InventoryStatusModel.out_of_stock) {
+    return <span className="badge text-bg-danger">Out of stock</span>;
   }
 };
 
-const TableHeader = ({ columnConfig }) => {
+const Header = ({ columnConfig }: { columnConfig: string[] }) => {
   return (
-    <thead className="table-light">
-      <tr>
+    <TableHead>
+      <TableRow>
         {columnConfig.map((column) => (
-          <th key={column}>{column}</th>
+          <TableCell key={column}>{column}</TableCell>
         ))}
-      </tr>
-    </thead>
-  );
-};
-const TableRow = ({ name, amount, status }) => {
-  return (
-    <tr>
-      <td>{name}</td>
-      <td>{amount}</td>
-      <td>
-        <Status status={status} />
-      </td>
-    </tr>
+      </TableRow>
+    </TableHead>
   );
 };
 
-const TableView = ({ data, columnConfig }) => {
+const Row = ({
+  name,
+  amount,
+  status,
+}: {
+  name: string;
+  amount: number;
+  status: InventoryStatusModel;
+}) => {
   return (
-    <table className="table align-middle mt-3 table-striped">
-      <TableHeader columnConfig={columnConfig} />
-      <tbody>
-        {data.map((row) => (
-          <TableRow
-            key={row.id}
-            name={row.name}
-            amount={row.amount}
-            status={row.status}
-          />
-        ))}
-      </tbody>
-    </table>
+    <TableRow>
+      <TableCell>{name}</TableCell>
+      <TableCell>{amount}</TableCell>
+      <TableCell>
+        <Status status={status} />
+      </TableCell>
+    </TableRow>
+  );
+};
+
+const TableView = ({ data, columnConfig }: Prop) => {
+  return (
+    <TableContainer>
+      <Table aria-label="table">
+        <Header columnConfig={columnConfig} />
+        <TableBody>
+          {data.map((row) => (
+            <Row
+              key={row.id}
+              name={row.name}
+              amount={row.amount}
+              status={row.status}
+            />
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 };
 

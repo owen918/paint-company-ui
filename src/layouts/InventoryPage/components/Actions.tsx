@@ -1,43 +1,84 @@
-const Actions = ({
-    onAddInventory = () => {},
-    onConsumeInventory = () => {},
-    onSwitchView,
-  }) => {
-    return (
-      <div className="d-flex mt-5 justify-content-between">
-        <div className="d-flex" style={{ gap: 10 }}>
-          <button
-            type="button"
-            className="btn btn-primary"
-            onClick={onAddInventory}
-          >
-            Add Inventory
-          </button>
-          <button
-            type="button"
-            className="btn btn-secondary"
-            onClick={onConsumeInventory}
-          >
-            Consume Inventory
-          </button>
-          <button
-            type="button"
-            className="btn btn-secondary"
-            onClick={() => onSwitchView('kanban')}
-          >
-            View Kanban
-          </button>
-          <button
-            type="button"
-            className="btn btn-secondary"
-            onClick={() => onSwitchView('table')}
-          >
-            View Table
-          </button>
-        </div>
-      </div>
-    );
-  };
+import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
+import { styled } from "@mui/material/styles";
 
-  export default Actions;
-  
+interface InventoryButtonProp {
+  onAddInventory: () => void;
+  onConsumeInventory: () => void;
+}
+
+interface ViewButtonProp {
+  currentView: string;
+  onSwitchView: (viewType: string) => void;
+}
+
+interface Prop extends InventoryButtonProp, ViewButtonProp {}
+
+/**
+ * Styled Components
+ */
+const ButtonBox = styled(Box)`
+  display: flex;
+  gap: 5px;
+`;
+
+const ActionButtonBox = styled(ButtonBox)`
+  justify-content: space-between;
+`;
+
+/**
+ *  COMPONENTS
+ */
+const InventoryButtonsBox = ({
+  onAddInventory,
+  onConsumeInventory,
+}: InventoryButtonProp) => {
+  return (
+    <ButtonBox>
+      <Button variant="contained" onClick={onAddInventory}>
+        Add
+      </Button>
+      <Button variant="outlined" onClick={onConsumeInventory}>
+        Consume
+      </Button>
+    </ButtonBox>
+  );
+};
+
+const ViewButtonsBox = ({ currentView, onSwitchView }: ViewButtonProp) => {
+  return (
+    <ButtonBox>
+      <Button
+        variant={currentView === "kanban" ? "contained" : null}
+        onClick={() => onSwitchView("kanban")}
+      >
+        <i className="bi bi-kanban"></i>
+      </Button>
+      <Button
+        variant={currentView === "table" ? "contained" : null}
+        onClick={() => onSwitchView("table")}
+      >
+        <i className="bi bi-card-list"></i>
+      </Button>
+    </ButtonBox>
+  );
+};
+
+const Actions = ({
+  currentView,
+  onAddInventory,
+  onConsumeInventory,
+  onSwitchView,
+}: Prop) => {
+  return (
+    <ActionButtonBox>
+      <InventoryButtonsBox
+        onAddInventory={onAddInventory}
+        onConsumeInventory={onConsumeInventory}
+      />
+      <ViewButtonsBox currentView={currentView} onSwitchView={onSwitchView} />
+    </ActionButtonBox>
+  );
+};
+
+export default Actions;
