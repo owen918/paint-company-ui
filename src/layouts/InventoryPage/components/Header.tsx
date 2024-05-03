@@ -1,9 +1,5 @@
-interface Prop {
-  currentView: string;
-}
-
-const Header = ({ currentView }: Prop) => {
-  return <h4>Paint Inventory -- {currentView}</h4>;
+const Header = ({ view }: { view: string }) => {
+  return <h4>Paint Inventory -- {view}</h4>;
 };
 
 export default Header;

@@ -1,18 +1,8 @@
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
-
-interface InventoryButtonProp {
-  onAddInventory: () => void;
-  onConsumeInventory: () => void;
-}
-
-interface ViewButtonProp {
-  currentView: string;
-  onSwitchView: (viewType: string) => void;
-}
-
-interface Prop extends InventoryButtonProp, ViewButtonProp {}
+import ViewKanbanOutlinedIcon from "@mui/icons-material/ViewKanbanOutlined";
+import ListAltOutlinedIcon from "@mui/icons-material/ListAltOutlined";
 
 /**
  * Styled Components
@@ -26,57 +16,41 @@ const ActionButtonBox = styled(ButtonBox)`
   justify-content: space-between;
 `;
 
-/**
- *  COMPONENTS
- */
-const InventoryButtonsBox = ({
-  onAddInventory,
-  onConsumeInventory,
-}: InventoryButtonProp) => {
-  return (
-    <ButtonBox>
-      <Button variant="contained" onClick={onAddInventory}>
-        Add
-      </Button>
-      <Button variant="outlined" onClick={onConsumeInventory}>
-        Consume
-      </Button>
-    </ButtonBox>
-  );
-};
-
-const ViewButtonsBox = ({ currentView, onSwitchView }: ViewButtonProp) => {
-  return (
-    <ButtonBox>
-      <Button
-        variant={currentView === "kanban" ? "contained" : null}
-        onClick={() => onSwitchView("kanban")}
-      >
-        <i className="bi bi-kanban"></i>
-      </Button>
-      <Button
-        variant={currentView === "table" ? "contained" : null}
-        onClick={() => onSwitchView("table")}
-      >
-        <i className="bi bi-card-list"></i>
-      </Button>
-    </ButtonBox>
-  );
-};
-
 const Actions = ({
   currentView,
-  onAddInventory,
-  onConsumeInventory,
+  onClickAddInventory,
+  onClickConsumeInventory,
   onSwitchView,
-}: Prop) => {
+}: {
+  currentView: string;
+  onClickAddInventory: () => void;
+  onClickConsumeInventory: () => void;
+  onSwitchView: (viewType: string) => void;
+}) => {
   return (
     <ActionButtonBox>
-      <InventoryButtonsBox
-        onAddInventory={onAddInventory}
-        onConsumeInventory={onConsumeInventory}
-      />
-      <ViewButtonsBox currentView={currentView} onSwitchView={onSwitchView} />
+      <ButtonBox>
+        <Button variant="contained" onClick={onClickAddInventory}>
+          Add
+        </Button>
+        <Button variant="outlined" onClick={onClickConsumeInventory}>
+          Consume
+        </Button>
+      </ButtonBox>
+      <ButtonBox>
+        <Button
+          variant={currentView === "kanban" ? "contained" : null}
+          onClick={() => onSwitchView("kanban")}
+        >
+          <ViewKanbanOutlinedIcon />
+        </Button>
+        <Button
+          variant={currentView === "table" ? "contained" : null}
+          onClick={() => onSwitchView("table")}
+        >
+          <ListAltOutlinedIcon />
+        </Button>
+      </ButtonBox>
     </ActionButtonBox>
   );
 };

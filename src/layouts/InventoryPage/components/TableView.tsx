@@ -9,11 +9,6 @@ import TableRow from "@mui/material/TableRow";
 import InventoryModel from "../../../models/InventoryModel";
 import InventoryStatusModel from "../../../models/InventoryStatusModel";
 
-interface Prop {
-  data: InventoryModel[];
-  columnConfig: string[];
-}
-
 const Status = ({ status }: { status: InventoryStatusModel }) => {
   if (status === InventoryStatusModel.available) {
     return <span className="badge text-bg-success">Available</span>;
@@ -58,7 +53,13 @@ const Row = ({
   );
 };
 
-const TableView = ({ data, columnConfig }: Prop) => {
+const TableView = ({
+  data,
+  columnConfig,
+}: {
+  data: InventoryModel[];
+  columnConfig: string[];
+}) => {
   return (
     <TableContainer>
       <Table aria-label="table">
