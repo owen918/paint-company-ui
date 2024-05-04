@@ -23,7 +23,6 @@ const EditDialogTableRow = ({ name, amount, handleOnChange }) => {
           name={name}
           type="number"
           variant="standard"
-          value={amount}
           onChange={handleOnChange}
         />
       </TableCell>
@@ -36,7 +35,7 @@ const EditDialogTableBody = ({ data, handleOnChange }) => {
     <TableBody>
       {data.map((paint) => (
         <EditDialogTableRow
-          key={paint.id}
+          key={paint.name}
           name={paint.name}
           amount={paint.amount}
           handleOnChange={handleOnChange}
@@ -91,21 +90,23 @@ const EditDialog = ({
   title,
   data,
   columnConfig,
-  handleDialogSubmit,
-  handleOnChange,
+  handleDialogSave,
+  handleModalOnChange,
 }) => {
   return (
     <Dialog open={open} onClose={handleOnClose}>
-      <form onSubmit={handleDialogSubmit}>
+      <form>
         <DialogTitle>{title}</DialogTitle>
         <EditDialogContext
           data={data}
           columnConfig={columnConfig}
-          handleOnChange={handleOnChange}
+          handleOnChange={handleModalOnChange}
         />
         <DialogActions>
           <Button onClick={handleOnClose}>Cancel</Button>
-          <Button type="submit">Save</Button>
+          <Button type="button" onClick={handleDialogSave}>
+            Save
+          </Button>
         </DialogActions>
       </form>
     </Dialog>
