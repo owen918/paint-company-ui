@@ -24,66 +24,61 @@ const InventoryPageBox = styled(Box)`
   margin: 8px 8px;
 `;
 
-const View = ({ currentView, data, columnConfig }: ViewProp) => {
+const View = ({
+  currentView,
+  data,
+  columnConfig,
+  onClickEditCard,
+}: {
+  currentView: string;
+  data: InventoryModel[];
+  columnConfig: string[];
+  onClickEditCard: (e: any) => void;
+}) => {
   if (currentView === "table") {
     return <TableView data={data} columnConfig={columnConfig}></TableView>;
   }
-  return <KanbanView data={data}></KanbanView>;
+  return (
+    <KanbanView data={data} onClickEditCard={onClickEditCard}></KanbanView>
+  );
 };
 
 export const InventoryPage = () => {
   const [inventory, setInventory] = useState(defaultData);
-  const [modalData, setModalData] = useState(inventory);
+
   const [currentView, setCurrentView] = useState("kanban");
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [mode, setMode] = useState("ADD");
+  const [mode, setMode] = useState("");
+  const [editPaintId, setEditPaintId] = useState(0);
 
   const handleDialogClose = () => setDialogOpen(false);
   const handleDialogOpen = () => setDialogOpen(true);
 
-  const addInventory = () => {
-    handleDialogClose();
-    setInventory(modalData);
-  };
-  const consumeInventory = () => {
-    handleDialogClose();
-    setInventory(modalData);
-  };
-
-  const dialogSave = mode === "ADD" ? addInventory : consumeInventory;
-  const title = mode === "ADD" ? "Add Inventory" : "Consume Inventory";
-
   const onClickAddInventory = () => {
-    handleDialogOpen();
     setMode("ADD");
+    handleDialogOpen();
   };
   const onClickConsumeInventory = () => {
-    handleDialogOpen();
     setMode("CONSUME");
+    handleDialogOpen();
   };
 
-  const handleModalOnChange = (e) => {
-    setModalData(
-      modalData.map((paint) => {
-        if (paint.name === e.target.name) {
-          return { ...paint, amount: e.target.valueAsNumber + paint.amount };
-        } else {
-          return paint;
-        }
-      })
-    );
+  const onClickEditCard = (e: any) => {
+    setMode("EDIT_SINGLE");
+    setEditPaintId(Number(e.currentTarget.id));
+    handleDialogOpen();
   };
 
   return (
     <InventoryPageBox>
       <EditDialog
         handleOnClose={handleDialogClose}
-        data={modalData}
         columnConfig={dialogColumnConfig}
         open={dialogOpen}
-        title={title}
-        handleDialogSave={dialogSave}
-        handleModalOnChange={handleModalOnChange}
+        mode={mode}
+        inventory={inventory}
+        setInventory={setInventory}
+        editPaintId={editPaintId}
       />
       <Header view={currentView}></Header>
       <Actions
@@ -96,6 +91,7 @@ export const InventoryPage = () => {
         data={inventory}
         columnConfig={defaultColumnConfig}
         currentView={currentView}
+        onClickEditCard={onClickEditCard}
       ></View>
     </InventoryPageBox>
   );

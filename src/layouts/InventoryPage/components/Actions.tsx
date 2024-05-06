@@ -39,13 +39,13 @@ const Actions = ({
       </ButtonBox>
       <ButtonBox>
         <Button
-          variant={currentView === "kanban" ? "contained" : null}
+          variant={currentView === "kanban" ? "contained" : undefined}
           onClick={() => onSwitchView("kanban")}
         >
           <ViewKanbanOutlinedIcon />
         </Button>
         <Button
-          variant={currentView === "table" ? "contained" : null}
+          variant={currentView === "table" ? "contained" : undefined}
           onClick={() => onSwitchView("table")}
         >
           <ListAltOutlinedIcon />

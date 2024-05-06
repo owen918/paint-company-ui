@@ -53,31 +53,59 @@ const StyledCardDetail = styled("div")`
   align-items: center;
 `;
 
-const EditButton = () => {
+const EditButton = ({
+  onClickEditCard,
+  id,
+}: {
+  onClickEditCard: (e: any) => void;
+  id: number;
+}) => {
   return (
-    <IconButton>
+    <IconButton onClick={onClickEditCard} id={String(id)}>
       <EditRoundedIcon fontSize="small" />
     </IconButton>
   );
 };
 
-const Card = ({ title, amount }: { title: string; amount: number }) => {
+const Card = ({
+  title,
+  amount,
+  onClickEditCard,
+  id,
+}: {
+  title: string;
+  amount: number;
+  onClickEditCard: (e: any) => void;
+  id: number;
+}) => {
   return (
     <StyledCard>
       <StyledCardTitle>{title}</StyledCardTitle>
       <StyledCardDetail>
         <div>{amount}</div>
-        <EditButton />
+        <EditButton onClickEditCard={onClickEditCard} id={id} />
       </StyledCardDetail>
     </StyledCard>
   );
 };
 
-const BoardCard = ({ data }: { data: InventoryModel[] }) => {
+const BoardCard = ({
+  data,
+  onClickEditCard,
+}: {
+  data: InventoryModel[];
+  onClickEditCard: (e: any) => void;
+}) => {
   return (
     <StyledBoardCard>
       {data.map((card) => (
-        <Card key={card.name} title={card.name} amount={card.amount} />
+        <Card
+          key={card.name}
+          title={card.name}
+          amount={card.amount}
+          id={card.id}
+          onClickEditCard={onClickEditCard}
+        />
       ))}
     </StyledBoardCard>
   );
@@ -88,20 +116,28 @@ const Board = ({
   title,
   data,
   color,
+  onClickEditCard,
 }: {
   title: string;
   data: InventoryModel[];
-  color: string;
+  color: string | undefined;
+  onClickEditCard: (e: any) => void;
 }) => {
   return (
     <StyledBoard $color={color}>
       <BoardTitle>{title}</BoardTitle>
-      <BoardCard data={data} />
+      <BoardCard data={data} onClickEditCard={onClickEditCard} />
     </StyledBoard>
   );
 };
 
-const KanbanView = ({ data }: { data: InventoryModel[] }) => {
+const KanbanView = ({
+  data,
+  onClickEditCard,
+}: {
+  data: InventoryModel[];
+  onClickEditCard: (e: any) => void;
+}) => {
   const getData = (data: InventoryModel[], status: string) => {
     return data.filter((paint) => paint.status === status);
   };
@@ -124,16 +160,19 @@ const KanbanView = ({ data }: { data: InventoryModel[] }) => {
         title={"Available"}
         data={getData(data, "available")}
         color={getCardColor("available")}
+        onClickEditCard={onClickEditCard}
       />
       <Board
         title={"Running Low"}
         data={getData(data, "running_low")}
         color={getCardColor("running_low")}
+        onClickEditCard={onClickEditCard}
       />
       <Board
         title={"Out of Stock"}
         data={getData(data, "out_of_stock")}
         color={getCardColor("out_of_stock")}
+        onClickEditCard={onClickEditCard}
       />
     </StyledKanban>
   );

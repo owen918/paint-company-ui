@@ -12,11 +12,9 @@ import InventoryStatusModel from "../../../models/InventoryStatusModel";
 const Status = ({ status }: { status: InventoryStatusModel }) => {
   if (status === InventoryStatusModel.available) {
     return <span className="badge text-bg-success">Available</span>;
-  }
-  if (status === InventoryStatusModel.running_low) {
+  } else if (status === InventoryStatusModel.running_low) {
     return <span className="badge text-bg-warning">Running Low</span>;
-  }
-  if (status === InventoryStatusModel.out_of_stock) {
+  } else {
     return <span className="badge text-bg-danger">Out of stock</span>;
   }
 };

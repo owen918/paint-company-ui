@@ -13,8 +13,16 @@ import {
   TableRow,
   TextField,
 } from "@mui/material";
+import InventoryModel from "../../../models/InventoryModel";
+import { useEffect, useState } from "react";
 
-const EditDialogTableRow = ({ name, amount, handleOnChange }) => {
+const EditDialogTableRow = ({
+  name,
+  handleOnChange,
+}: {
+  name: string;
+  handleOnChange: (e: any) => void;
+}) => {
   return (
     <TableRow>
       <TableCell>{name}</TableCell>
@@ -30,14 +38,19 @@ const EditDialogTableRow = ({ name, amount, handleOnChange }) => {
   );
 };
 
-const EditDialogTableBody = ({ data, handleOnChange }) => {
+const EditDialogTableBody = ({
+  data,
+  handleOnChange,
+}: {
+  data: { name: string; amount: number }[];
+  handleOnChange: (e: any) => void;
+}) => {
   return (
     <TableBody>
       {data.map((paint) => (
         <EditDialogTableRow
           key={paint.name}
           name={paint.name}
-          amount={paint.amount}
           handleOnChange={handleOnChange}
         />
       ))}
@@ -45,7 +58,11 @@ const EditDialogTableBody = ({ data, handleOnChange }) => {
   );
 };
 
-const EditDialogTableHeader = ({ columnConfig }) => {
+const EditDialogTableHeader = ({
+  columnConfig,
+}: {
+  columnConfig: string[];
+}) => {
   return (
     <TableHead>
       <TableRow>
@@ -57,7 +74,15 @@ const EditDialogTableHeader = ({ columnConfig }) => {
   );
 };
 
-const EditDialogTable = ({ columnConfig, data, handleOnChange }) => {
+const EditDialogTable = ({
+  columnConfig,
+  data,
+  handleOnChange,
+}: {
+  data: { name: string; amount: number }[];
+  columnConfig: string[];
+  handleOnChange: (e: any) => void;
+}) => {
   return (
     <TableContainer>
       <Table size="small" aria-label="edit-table">
@@ -68,7 +93,15 @@ const EditDialogTable = ({ columnConfig, data, handleOnChange }) => {
   );
 };
 
-const EditDialogContext = ({ data, columnConfig, handleOnChange }) => {
+const EditDialogContext = ({
+  data,
+  columnConfig,
+  handleOnChange,
+}: {
+  data: { name: string; amount: number }[];
+  columnConfig: string[];
+  handleOnChange: (e: any) => void;
+}) => {
   return (
     <DialogContent>
       <DialogContentText>
@@ -87,24 +120,128 @@ const EditDialogContext = ({ data, columnConfig, handleOnChange }) => {
 const EditDialog = ({
   open,
   handleOnClose,
-  title,
-  data,
   columnConfig,
-  handleDialogSave,
-  handleModalOnChange,
+  mode,
+  inventory,
+  setInventory,
+  editPaintId,
+}: {
+  open: boolean;
+  handleOnClose: () => void;
+  columnConfig: string[];
+  mode: string;
+  inventory: InventoryModel[];
+  setInventory: any;
+  editPaintId: number;
 }) => {
+  const getDefaultModalData = (
+    inventory: InventoryModel[],
+    mode: string,
+    editPaintId: number
+  ): { name: string; amount: number }[] => {
+    let modalInventory = [...inventory];
+    if (mode === "EDIT_SINGLE") {
+      modalInventory = modalInventory.filter(
+        (paint) => paint.id === editPaintId
+      );
+    }
+    return modalInventory.map((paint) => ({
+      name: paint.name,
+      amount: 0,
+    }));
+  };
+
+  const getTitle = (mode: string) => {
+    if (mode === "ADD") {
+      return "Add Inventory";
+    } else if (mode === "CONSUME") {
+      return "Consume Inventory";
+    } else {
+      return "Edit Inventory";
+    }
+  };
+
+  const [modalData, setModalData] = useState<
+    { name: string; amount: number }[]
+  >([]);
+
+  useEffect(() => {
+    // init();
+    if (open === true) {
+      setModalData(getDefaultModalData(inventory, mode, editPaintId));
+    } else {
+      setModalData([{ name: "", amount: 0 }]);
+    }
+    console.log("inside", modalData);
+  }, [open]);
+
+  const handleModalOnChange = (e: any) => {
+    setModalData(
+      modalData.map((paint) => {
+        const num = !isNaN(e.target.valueAsNumber) ? e.target.valueAsNumber : 0;
+        if (paint.name === e.target.name) {
+          return { ...paint, amount: num };
+        } else {
+          return paint;
+        }
+      })
+    );
+  };
+
+  const addInventory = (e: any) => {
+    handleOnClose();
+    setInventory(
+      inventory.map((paint) => {
+        const data = modalData.filter((d) => d.name === paint.name)[0];
+        return { ...paint, amount: data.amount + paint.amount };
+      })
+    );
+  };
+
+  const consumeInventory = () => {
+    handleOnClose();
+    setInventory(
+      inventory.map((paint) => {
+        const data = modalData.filter((d) => d.name === paint.name)[0];
+        return { ...paint, amount: paint.amount - data.amount };
+      })
+    );
+  };
+
+  const editInventory = () => {
+    handleOnClose();
+    setInventory(
+      inventory.map((paint) =>
+        paint.name === modalData[0].name
+          ? { ...paint, amount: modalData[0].amount }
+          : paint
+      )
+    );
+  };
+
+  const dialogSave = () => {
+    if (mode === "ADD") {
+      return addInventory;
+    } else if (mode === "CONSUME") {
+      return consumeInventory;
+    } else {
+      return editInventory;
+    }
+  };
+
+  console.log("outside", modalData);
   return (
     <Dialog open={open} onClose={handleOnClose}>
       <form>
-        <DialogTitle>{title}</DialogTitle>
+        <DialogTitle>{getTitle(mode)}</DialogTitle>
         <EditDialogContext
-          data={data}
+          data={modalData}
           columnConfig={columnConfig}
           handleOnChange={handleModalOnChange}
         />
         <DialogActions>
           <Button onClick={handleOnClose}>Cancel</Button>
-          <Button type="button" onClick={handleDialogSave}>
+          <Button type="button" onClick={dialogSave()}>
             Save
           </Button>
         </DialogActions>
