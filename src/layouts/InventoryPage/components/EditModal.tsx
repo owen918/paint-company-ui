@@ -18,14 +18,19 @@ import { useEffect, useState } from "react";
 
 const EditDialogTableRow = ({
   name,
+  originalAmount,
+  updatedAmount,
   handleOnChange,
 }: {
   name: string;
+  originalAmount: number;
+  updatedAmount: number;
   handleOnChange: (e: any) => void;
 }) => {
   return (
     <TableRow>
       <TableCell>{name}</TableCell>
+      <TableCell>{originalAmount}</TableCell>
       <TableCell>
         <TextField
           name={name}
@@ -34,6 +39,7 @@ const EditDialogTableRow = ({
           onChange={handleOnChange}
         />
       </TableCell>
+      <TableCell>{updatedAmount}</TableCell>
     </TableRow>
   );
 };
@@ -42,7 +48,12 @@ const EditDialogTableBody = ({
   data,
   handleOnChange,
 }: {
-  data: { name: string; amount: number }[];
+  data: {
+    name: string;
+    amount: number;
+    originalAmount: number;
+    updatedAmount: number;
+  }[];
   handleOnChange: (e: any) => void;
 }) => {
   return (
@@ -51,6 +62,8 @@ const EditDialogTableBody = ({
         <EditDialogTableRow
           key={paint.name}
           name={paint.name}
+          originalAmount={paint.originalAmount}
+          updatedAmount={paint.updatedAmount}
           handleOnChange={handleOnChange}
         />
       ))}
@@ -79,7 +92,12 @@ const EditDialogTable = ({
   data,
   handleOnChange,
 }: {
-  data: { name: string; amount: number }[];
+  data: {
+    name: string;
+    amount: number;
+    originalAmount: number;
+    updatedAmount: number;
+  }[];
   columnConfig: string[];
   handleOnChange: (e: any) => void;
 }) => {
@@ -98,7 +116,12 @@ const EditDialogContext = ({
   columnConfig,
   handleOnChange,
 }: {
-  data: { name: string; amount: number }[];
+  data: {
+    name: string;
+    amount: number;
+    originalAmount: number;
+    updatedAmount: number;
+  }[];
   columnConfig: string[];
   handleOnChange: (e: any) => void;
 }) => {
@@ -138,7 +161,12 @@ const EditDialog = ({
     inventory: InventoryModel[],
     mode: string,
     editPaintId: number
-  ): { name: string; amount: number }[] => {
+  ): {
+    name: string;
+    amount: number;
+    originalAmount: number;
+    updatedAmount: number;
+  }[] => {
     let modalInventory = [...inventory];
     if (mode === "EDIT_SINGLE") {
       modalInventory = modalInventory.filter(
@@ -148,6 +176,8 @@ const EditDialog = ({
     return modalInventory.map((paint) => ({
       name: paint.name,
       amount: 0,
+      originalAmount: paint.amount,
+      updatedAmount: 0,
     }));
   };
 
@@ -162,7 +192,12 @@ const EditDialog = ({
   };
 
   const [modalData, setModalData] = useState<
-    { name: string; amount: number }[]
+    {
+      name: string;
+      amount: number;
+      originalAmount: number;
+      updatedAmount: number;
+    }[]
   >([]);
 
   useEffect(() => {
@@ -170,7 +205,9 @@ const EditDialog = ({
     if (open === true) {
       setModalData(getDefaultModalData(inventory, mode, editPaintId));
     } else {
-      setModalData([{ name: "", amount: 0 }]);
+      setModalData([
+        { name: "", amount: 0, originalAmount: 0, updatedAmount: 0 },
+      ]);
     }
     console.log("inside", modalData);
   }, [open]);
@@ -180,7 +217,11 @@ const EditDialog = ({
       modalData.map((paint) => {
         const num = !isNaN(e.target.valueAsNumber) ? e.target.valueAsNumber : 0;
         if (paint.name === e.target.name) {
-          return { ...paint, amount: num };
+          return {
+            ...paint,
+            amount: num,
+            updatedAmount: paint.originalAmount + num,
+          };
         } else {
           return paint;
         }

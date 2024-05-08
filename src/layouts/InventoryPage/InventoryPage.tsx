@@ -10,7 +10,12 @@ import EditDialog from "./components/EditModal";
 
 const defaultData: InventoryModel[] = require("../../data/inventory.json");
 const defaultColumnConfig: string[] = ["Name", "Amount", "Status"];
-const dialogColumnConfig: string[] = ["Name", "Amount"];
+const dialogColumnConfig: string[] = [
+  "Name",
+  "Original Amount",
+  "Amount",
+  "Updated Amount",
+];
 
 interface ViewProp {
   currentView: string;
