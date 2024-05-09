@@ -17,12 +17,6 @@ const dialogColumnConfig: string[] = [
   "Updated Amount",
 ];
 
-interface ViewProp {
-  currentView: string;
-  data: InventoryModel[];
-  columnConfig: string[];
-}
-
 const InventoryPageBox = styled(Box)`
   display: flex;
   flex-direction: column;

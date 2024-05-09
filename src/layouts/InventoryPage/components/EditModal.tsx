@@ -209,7 +209,6 @@ const EditDialog = ({
         { name: "", amount: 0, originalAmount: 0, updatedAmount: 0 },
       ]);
     }
-    console.log("inside", modalData);
   }, [open]);
 
   const handleModalOnChange = (e: any) => {
@@ -269,8 +268,6 @@ const EditDialog = ({
       return editInventory;
     }
   };
-
-  console.log("outside", modalData);
   return (
     <Dialog open={open} onClose={handleOnClose}>
       <form>
