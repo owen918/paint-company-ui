@@ -9,11 +9,11 @@ const StyledKanban = styled(Box)`
   display: flex;
 `;
 
-const StyledBoard = styled(Box)<{ $color?: string }>`
+const StyledBoard = styled(Box)<{ bgcolor?: string }>`
   border: 1px solid rgba(0, 0, 0, 0.125);
   border-radius: 0.25rem;
   flex: 1;
-  background-color: ${(props) => props.$color || "#f2f2f3"};
+  background-color: ${(props) => props.bgcolor || "#f2f2f3"};
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -124,7 +124,7 @@ const Board = ({
   onClickEditCard: (e: any) => void;
 }) => {
   return (
-    <StyledBoard $color={color}>
+    <StyledBoard bgcolor={color}>
       <BoardTitle>{title}</BoardTitle>
       <BoardCard data={data} onClickEditCard={onClickEditCard} />
     </StyledBoard>
