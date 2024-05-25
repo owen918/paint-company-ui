@@ -4,40 +4,24 @@ import Actions from "./components/Actions";
 import TableView from "./components/TableView";
 import Header from "./components/Header";
 import KanbanView from "./components/KanbanView";
-import { Alert, Box, Snackbar } from "@mui/material";
+import { Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import EditDialog from "./components/EditModal";
-import Status from "../../models/InventoryStatusModel";
 
 const defaultData: InventoryModel[] = require("../../data/inventory.json");
 const defaultColumnConfig: string[] = ["Name", "Amount", "Status"];
+const dialogColumnConfig: string[] = [
+  "Name",
+  "Original Amount",
+  "Amount",
+  "Updated Amount",
+];
 
 const InventoryPageBox = styled(Box)`
   display: flex;
   flex-direction: column;
   margin: 8px 8px;
 `;
-
-const Banner = ({
-  barOpen,
-  handleBarClose,
-}: {
-  barOpen: boolean;
-  handleBarClose: () => void;
-}) => {
-  return (
-    <Snackbar
-      open={barOpen}
-      autoHideDuration={6000}
-      onClose={handleBarClose}
-      anchorOrigin={{ vertical: "top", horizontal: "center" }}
-    >
-      <Alert onClose={handleBarClose} severity="success" variant="filled">
-        You have successfully updated the paint inventory !
-      </Alert>
-    </Snackbar>
-  );
-};
 
 const View = ({
   currentView,
@@ -65,13 +49,9 @@ export const InventoryPage = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [mode, setMode] = useState("");
   const [editPaintId, setEditPaintId] = useState(0);
-  const [barOpen, setBarOpen] = useState(false);
 
   const handleDialogClose = () => setDialogOpen(false);
   const handleDialogOpen = () => setDialogOpen(true);
-
-  const handleBarOpen = () => setBarOpen(true);
-  const handleBarClose = () => setBarOpen(false);
 
   const onClickAddInventory = () => {
     setMode("ADD");
@@ -88,28 +68,16 @@ export const InventoryPage = () => {
     handleDialogOpen();
   };
 
-  const setPaintStatus = (n: number) => {
-    if (n <= 0) {
-      return Status.out_of_stock;
-    } else if (n <= 30) {
-      return Status.running_low;
-    } else {
-      return Status.available;
-    }
-  };
-
   return (
     <InventoryPageBox>
-      <Banner barOpen={barOpen} handleBarClose={handleBarClose} />
       <EditDialog
         handleOnClose={handleDialogClose}
-        handleBarOpen={handleBarOpen}
+        columnConfig={dialogColumnConfig}
         open={dialogOpen}
         mode={mode}
         inventory={inventory}
         setInventory={setInventory}
         editPaintId={editPaintId}
-        setPaintStatus={setPaintStatus}
       />
       <Header view={currentView}></Header>
       <Actions
