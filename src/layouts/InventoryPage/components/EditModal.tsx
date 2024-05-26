@@ -177,7 +177,7 @@ const EditDialog = ({
       name: paint.name,
       amount: 0,
       originalAmount: paint.amount,
-      updatedAmount: 0,
+      updatedAmount: paint.amount,
     }));
   };
 
@@ -201,7 +201,6 @@ const EditDialog = ({
   >([]);
 
   useEffect(() => {
-    // init();
     if (open === true) {
       setModalData(getDefaultModalData(inventory, mode, editPaintId));
     } else {
@@ -212,8 +211,9 @@ const EditDialog = ({
   }, [open]);
 
   const handleModalOnChange = (e: any) => {
-    setModalData(
-      modalData.map((paint) => {
+    let toModify = [...modalData];
+    if (mode === "ADD") {
+      toModify = toModify.map((paint) => {
         const num = !isNaN(e.target.valueAsNumber) ? e.target.valueAsNumber : 0;
         if (paint.name === e.target.name) {
           return {
@@ -224,8 +224,35 @@ const EditDialog = ({
         } else {
           return paint;
         }
-      })
-    );
+      });
+    } else if (mode === "CONSUME") {
+      toModify = toModify.map((paint) => {
+        const num = !isNaN(e.target.valueAsNumber) ? e.target.valueAsNumber : 0;
+        if (paint.name === e.target.name) {
+          return {
+            ...paint,
+            amount: num,
+            updatedAmount: paint.originalAmount - num,
+          };
+        } else {
+          return paint;
+        }
+      });
+    } else {
+      toModify = toModify.map((paint) => {
+        const num = !isNaN(e.target.valueAsNumber) ? e.target.valueAsNumber : 0;
+        if (paint.name === e.target.name) {
+          return {
+            ...paint,
+            amount: num,
+            updatedAmount: num,
+          };
+        } else {
+          return paint;
+        }
+      });
+    }
+    setModalData(toModify);
   };
 
   const addInventory = (e: any) => {
